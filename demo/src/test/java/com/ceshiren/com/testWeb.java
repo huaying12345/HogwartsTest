@@ -3,9 +3,10 @@ package com.ceshiren.com;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
-import org.testng.annotations.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class testWeb {
 
 
-    private WebDriver driver = new ChromeDriver() ;
+    private static WebDriver driver ;
 
     @Test
     void testSearch(){
@@ -36,6 +37,7 @@ public class testWeb {
 
     @Test
     void testLogin() throws InterruptedException, IOException {
+        driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         driver.get("https://work.weixin.qq.com/wework_admin/frame");
 
@@ -43,20 +45,18 @@ public class testWeb {
         Set<Cookie> cookies = driver.manage().getCookies();
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-        File f = new File("cookies.yaml");
-        if(f.exists()){
-            f.delete();
-        }
+
         mapper.writeValue(new File("cookies.yaml"),cookies);
 
     }
 
 
-    @Test
-    public void testLogined() throws IOException, InterruptedException {
+    @BeforeAll
+    static void initLogined() throws IOException, InterruptedException {
+        driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         driver.get("https://work.weixin.qq.com/wework_admin/frame");
-        
+
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         TypeReference typeReference= new TypeReference<List<HashMap<String,Object>>>(){};
         List<HashMap<String,Object>> cookies = mapper.readValue(new File("cookies.yaml"), typeReference);
@@ -75,25 +75,11 @@ public class testWeb {
     @Test
     public void addMember() throws IOException, InterruptedException {
 
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        driver.get("https://work.weixin.qq.com/wework_admin/frame");
-
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        TypeReference typeReference= new TypeReference<List<HashMap<String,Object>>>(){};
-        List<HashMap<String,Object>> cookies = mapper.readValue(new File("cookies.yaml"), typeReference);
-//        System.out.println(cookies);
-
-        cookies.forEach(cookieMap->{
-            driver.manage().addCookie(new Cookie(cookieMap.get("name").toString(),cookieMap.get("value").toString()));
-        });
-
-        driver.navigate().refresh();
-
-        driver.findElement(By.xpath("//a[@node-type='addmember']"));
-        driver.findElement(By.id("username")).sendKeys("花楹");
-        driver.findElement(By.id("memberAdd_acctid")).sendKeys("huaying");
-        driver.findElement(By.cssSelector("#qui_btn ww_btn js_btn_save"));
-
+        driver.findElement(By.cssSelector("[node-type=addmember]")).click();
+        driver.findElement(By.cssSelector("[id=username]")).sendKeys("花楹");
+        driver.findElement(By.cssSelector("[id=memberAdd_acctid]")).sendKeys("huaying");
+        driver.findElement(By.cssSelector("[id=memberAdd_mail")).sendKeys("AAA@qq.com");
+        driver.findElement(By.linkText("保存")).click();
 
 
     }
