@@ -14,7 +14,45 @@ public class TestCase {
     public List<HashMap<String,Object>>  steps;
     private ChromeDriver driver;
     private WebElement currentElement;
+    public int index = 0;
 
+    /*
+     * 测试用例裂变，基于数据自动生成多份测试用例
+     */
+    public List<TestCase> testCaseGenerate(){
+
+        List<TestCase> testCaseList = new ArrayList();
+        for (int i = 0; i < data.size(); i++) {
+            TestCase testCaseNew = new TestCase();
+            testCaseNew.index = i;
+            testCaseNew.steps = steps;
+            testCaseNew.data =data;
+            testCaseList.add(testCaseNew);
+
+        }
+        return testCaseList;
+    }
+
+    /**
+     * 替换yaml中都一些变量
+     * @param step
+     * @param key
+     * @return
+     */
+    private Object getValue(HashMap<String, Object> step, String key){
+        Object value = step.get(key);
+        if (value instanceof String){
+            //进行替换 todo：复杂结构支持
+            return ((String) value).replace("${data}",data.get(index));
+        }else{
+            return value;
+        }
+
+    }
+
+    private Object getValue(HashMap<String, Object> step, String key,Object defaultValue){
+        return step.getOrDefault(key,defaultValue);
+    }
 
 
     public void run(){
@@ -27,16 +65,15 @@ public class TestCase {
             }
             if(step.keySet().contains("implicitly_wait")){
                 driver.manage().timeouts().implicitlyWait(
-                        (int) step.getOrDefault("implicitly_wait",5), TimeUnit.SECONDS);
+                        (int) getValue(step,"implicitly_wait",5), TimeUnit.SECONDS);
             }
             if(step.keySet().contains("get")){
-                driver.get(step.get("get").toString());
+                driver.get(getValue(step,"get").toString());
             }
             if(step.keySet().contains("find")){
                 ArrayList<By> bys = new ArrayList<>();
-                ((HashMap<String,String>)step.get("find")).entrySet().forEach(stringStringEntry -> {
+                ((HashMap<String,String>)getValue(step,"find")).entrySet().forEach(stringStringEntry -> {
                     if(stringStringEntry.getKey().contains("id")){
-//                        by.set(By.id(stringStringEntry.getValue()));
                         bys.add(By.id(stringStringEntry.getValue()));
                     }
 
@@ -51,7 +88,7 @@ public class TestCase {
             }
             if(step.keySet().contains("send_keys")){
                 //todo:参数化
-                currentElement.sendKeys("demo");
+                currentElement.sendKeys(getValue(step,"send_keys").toString());
             }
 
         });
