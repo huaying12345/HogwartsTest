@@ -1,0 +1,13 @@
+#todo 在数据驱动中再次实现参数化支持
+data:
+  - banana
+  - apple
+
+#todo 支持page object
+
+steps:
+#  - init: [ mainPage,com.ceshiren.framework.MainPage ]
+  - init: [mainPage,main_po]
+  - mainPage.search: {}
+#  - searchPage: {}
+#  - searchPage.search: ${data}

@@ -67,13 +67,8 @@ public class ParamsTest {
     void search(TestCase testCase){
         System.out.println(testCase);
         //done:测试步骤的数据驱动
+        //done: runner引擎
         testCase.run();
-    }
-
-
-    @AfterAll
-    static void afterAll(){
-
     }
 
 
@@ -81,13 +76,10 @@ public class ParamsTest {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
         TestCase testCase = mapper.readValue(
-                ParamsTest.class.getResourceAsStream("/framework/search.yaml"),
-                TestCase.class);
+                ParamsTest.class.getResourceAsStream("/framework/search_po_test.yaml"),
+                SeleniumTestCase.class);
 
 //        return Stream.of(testCase);
-        return testCase.testCaseGenerate();
+        return testCase.testcaseGenerate();
     }
-
-
-
 }
