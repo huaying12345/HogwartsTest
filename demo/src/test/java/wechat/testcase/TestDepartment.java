@@ -52,11 +52,13 @@ public class TestDepartment {
     }
     @DisplayName("创建部门")
     @ParameterizedTest
+    @Order(1)
     @CsvFileSource(resources = "/data/createDepartment.csv", numLinesToSkip = 1)
     void createDepartment(String creatName, String creatEnName, String returnCode) {
         Response response=DepartMentObject.creatDepartMent(creatName,creatEnName,accessToken);
         assertEquals(returnCode,response.path("errcode").toString());
     }
+
     @DisplayName("修改部门")
     @Test
     @Order(2)
