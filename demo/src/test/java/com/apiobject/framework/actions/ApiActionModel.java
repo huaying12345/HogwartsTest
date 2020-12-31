@@ -140,7 +140,6 @@ public class ApiActionModel {
                 actionVariables.put(formalParam.get(i), actualParam.get(i));
             }
 
-
             /* 4.请求 url中的内部变量进行一个替换*/
             if (query != null) {
                 finalQuery.putAll(PlaceholderUtils.resolveMap(query, actionVariables));
@@ -154,7 +153,6 @@ public class ApiActionModel {
         if (contentType != null) {
             requestSpecification.contentType(contentType);
         }
-
         if (headers != null) {
             requestSpecification.headers(headers);
         }

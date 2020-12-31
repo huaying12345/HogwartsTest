@@ -7,10 +7,10 @@ import com.apiobject.framework.global.ApiLoader;
 import com.apiobject.framework.global.GlobalVariables;
 import com.apiobject.framework.util.PlaceholderUtils;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.function.Executable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Executable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,8 +35,7 @@ public class StepModel {
 
     /*2、需要定义StepResult类*/
     private StepResult stepResult = new StepResult();
-    private ArrayList<Executable> arrayList = new ArrayList<>();
-
+    private ArrayList<Executable> assertList = new ArrayList<>();
 
     public String getApi() {
         return api;
@@ -115,32 +114,39 @@ public class StepModel {
 
         /*5、存储save*/
         if(save != null){
-            save.forEach(variablesName,path->{
+            save.forEach((variablesName,path)->{
                 String value = response.path(path.toString());
                 stepVariables.put(variablesName,value);
+                logger.debug( "局部变量更新" + stepVariables);
             });
         }
 
-        /*5、存储saveGlobal*/
+        /*6、存储saveGlobal*/
         if(saveGlobal != null){
-            save.forEach(variablesName,path->{
-                String value = response.path(path.toString());
-                GlobalVariables.getGlobalVariables().put(variablesName,value);
-                logger.debug("全局变量更新"+GlobalVariables.getGlobalVariables());
-            });
-        }
-        /*6、处理软断言需要的*/
-
-        if(asserts!=null){
-            asserts.stream().forEach(assertModel -> {
-                assertList.add()->{
-                    assertThat(assertModel.getReason(),assertModel.getActual(),equalTo(assertModel.getExpect()));
-                }
+            saveGlobal.forEach((variablesName,path)->{
+                String value = response.path( path.toString() );
+                GlobalVariables.getGlobalVariables().put(variablesName, value );
+                logger.debug( "全局变量更新" + GlobalVariables.getGlobalVariables());
             });
         }
 
-        return null;
+        /*7、根据case中的配置对返回结果进行软断言，但不会终结测试将断言结果存入断言结果列表中，在用例最后进行统一结果输出*/
+        if(asserts !=null){
+            asserts.stream().forEach( assertModel -> {
+                assertList.add( ()->{
+                    assertThat(assertModel.getReason(), response.path(assertModel.getActual()).toString(), equalTo(assertModel.getExpect()));
+                } );
+            });
+        }
 
+        /**
+         * 8、将response和断言结果存储到stepResult对象中并返回
+         */
+        stepResult.setAssertList(assertList);
+        stepResult.setStepVariables(stepVariables);
+        stepResult.setResponse(response);
+
+        return stepResult;
     }
 
 

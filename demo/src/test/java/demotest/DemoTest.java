@@ -11,7 +11,7 @@ public class DemoTest {
     public static String access_token;
 
     @BeforeAll
-    public static void getMetgod(){
+    public static void getMethod(){
         access_token = given()
                 .params("corpid","wwf5b2f052d0c286c4","corpsecret","6cL-Ur7OSNUYJkglFYl5xlwRyMeeorMy6TmU-5NmFr4")
                 .get("https://qyapi.weixin.qq.com/cgi-bin/gettoken")
