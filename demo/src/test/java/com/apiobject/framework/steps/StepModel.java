@@ -20,7 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class StepModel {
     public static final Logger logger = LoggerFactory.getLogger(StepModel.class);
 
-     /*1、需要定义Assert类*/
+     /*1、需要定义AssertModel类*/
      private String api;
      private String action;
      private ArrayList<String> actualParameter;
@@ -29,6 +29,7 @@ public class StepModel {
      private ArrayList<AssertModel> asserts;
 
 
+     //局部变量，实参也存在占位符的情况，需要替换成实参
     private ArrayList<String> finalActualParamter = new ArrayList<>();
     HashMap<String,String> stepVariables = new HashMap<>();
 
@@ -36,6 +37,7 @@ public class StepModel {
     /*2、需要定义StepResult类*/
     private StepResult stepResult = new StepResult();
     private ArrayList<Executable> assertList = new ArrayList<>();
+
 
     public String getApi() {
         return api;
@@ -102,6 +104,8 @@ public class StepModel {
     }
 
     public StepResult run(HashMap<String,String> testCaseVariables){
+        //testCaseVariables存储每个step返回的变量
+
         /*3、需要定义AssertModel类*/
 
         if(actualParameter!=null){
@@ -115,7 +119,7 @@ public class StepModel {
         /*5、存储save*/
         if(save != null){
             save.forEach((variablesName,path)->{
-                String value = response.path(path.toString());
+                String value = response.path(path).toString();
                 stepVariables.put(variablesName,value);
                 logger.debug( "局部变量更新" + stepVariables);
             });

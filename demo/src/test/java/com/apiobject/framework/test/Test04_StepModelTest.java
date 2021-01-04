@@ -26,6 +26,7 @@ public class Test04_StepModelTest {
 
     @Test
     void runTest(){
+        //实参的设置
         ArrayList<String> actualParam = new ArrayList<>();
         actualParam.add("wwf5b2f052d0c286c4");
         actualParam.add("pk9zr9yPMy-_2YBCQiuTWoafuoMn2lj7vSbZ9p-T88k");
@@ -38,9 +39,11 @@ public class Test04_StepModelTest {
         assertModel.setMatcher("equalTo");
         assertModel.setReason("getToken错误码校验01");
         asserts.add(assertModel);
+
         //save
         HashMap<String ,String> save = new HashMap<>();
         save.put("accesstoken","access_token");
+
         //globalsave
         HashMap<String ,String> globalsave = new HashMap<>();
         globalsave.put("accesstoken","access_token");

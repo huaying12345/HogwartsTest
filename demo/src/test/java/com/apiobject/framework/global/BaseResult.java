@@ -2,7 +2,7 @@
  * FileName: BaseResult
  * Author:   huaying
  * Date:     2020-12-29 11:51
- * Description:
+ * Description:用户保存结果的Response
  * version: IT2020
  * History:
  * <author>          <time>          <version>          <desc>
