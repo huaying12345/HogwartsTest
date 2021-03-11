@@ -1,4 +1,4 @@
-/**
+package review; /**
  * FileName: Test
  * Author:   huaying
  * Date:     2021-2-26 17:12
@@ -10,10 +10,12 @@
  */
 
 
+import java.util.*;
+
 /**
  * @author：huaying
  * Date: 2021-2-26 17:12
- * @Description：
+ * @Description： 各种排序
  */
 
 public class Sort {
@@ -83,8 +85,38 @@ public class Sort {
     }
 
 
+    /**
+     * 计算相同字符个数，并按个数排序，返回前 k 个(多家大厂的高频题目)
+     */
+
+    public static List sort(String arrs[], int k){
+        Map<String, Integer> map = new HashMap<>();
+        for (String arr : arrs) {
+            map.put(arr, map.getOrDefault(map.get(arr), 1) + 1);
+        }
+
+        List<Map.Entry<String, Integer>> lists = new ArrayList<>(map.entrySet());
+        //按map的value排序
+        Collections.sort(lists, new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                return o2.getValue() - o1.getValue();
+            }
+        });
+
+        List<String> list = new ArrayList<>();
+        if (k > lists.size()){
+            return list;
+        }
+        for (int i = 0 ; i < k ; i++){
+            list.add("(" + lists.get(i).getKey() + "," + lists.get(i).getValue() + "）");
+        }
+        return list;
+    }
+
     public static void  main(String args[]){
-         int a[] = {11,2,3,5,7,12,19};
+         int a[] = {2,11,2,3,5,7,12,19};
+         String b[] = {"a","b","a","b","c","c","c","d"};
 //         int b[] = selectSort(a);
 //         for(int i =0; i<b.length;i++){
 //             System.out.println("选择排序后的数组: "+ b[i]);
@@ -95,11 +127,15 @@ public class Sort {
 //            System.out.println("冒泡排序后的数组: "+ c[i]);
 //        }
 
-        int d[] = quickSort(a,0,6);
-        for(int i =0; i<d.length;i++){
-            System.out.println("快速排序后的数组: " + d[i]);
-        }
-//        quickSort(a,0,6);
+//        int d[] = quickSort(a,0,6);
+//        for(int i =0; i<d.length;i++){
+//            System.out.println("快速排序后的数组: " + d[i]);
+//        }
+////        quickSort(a,0,6);
+
+        sort(b,3);
+
+
     }
 
 }

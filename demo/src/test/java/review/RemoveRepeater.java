@@ -1,4 +1,4 @@
-/**
+package review; /**
  * FileName: Test
  * Author:   huaying
  * Date:     2021-3-5 17:58
@@ -14,7 +14,7 @@ import java.util.*;
 
 /**
  * @author：huaying Date: 2021-3-5 17:58
- * @Description：元素去重
+ * @Description：数组元素去重
  */
 
 public class RemoveRepeater {
