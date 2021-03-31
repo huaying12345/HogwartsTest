@@ -171,7 +171,7 @@ public class JwtUtils {
         jwtInfo.setDingAccountId("76450408");
         jwtInfo.setAccountUuid("68bbcc22-b145-4914-8809-fae39856e46a");
         jwtInfo.setMoziUserCode("GE_2d41d9e698ff4b3b9c4cbad77269f9a3");*/
-        String token = getToken("樊丽鹃");
+        String token = getToken("金婵媛");
         System.out.println(token);
     }
 }
